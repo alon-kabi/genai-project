@@ -1,3 +1,7 @@
+from .front_desk import InfoAdvisor
+from .front_desk import ScheduleAdvisor
+from .front_desk import ExitAdvisor
+
 class MainAgent:
     def process_input(self, user_input, chat_history):
         """

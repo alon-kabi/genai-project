@@ -1,7 +1,7 @@
-class ConversationManager:
+class FrontDesk:
     def __init__(self):
         self.chat_history = []
-        self.main_agent = MainAgent()
+        self.main_agent = FrontDesk()
 
     def fill_registration_form(self):
         """

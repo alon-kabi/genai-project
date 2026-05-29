@@ -1,5 +1,7 @@
+from shared import FrontDesk
+
 def main():
-    manager = ConversationManager()
+    manager = FrontDesk()
 
     # Initial setup
     manager.fill_registration_form()
