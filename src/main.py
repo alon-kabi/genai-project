@@ -1,10 +1,7 @@
-from shared import FrontDesk
+from shared import ConversationManager
 
 def main():
-    manager = FrontDesk()
-
-    # Initial setup
-    manager.fill_registration_form()
+    manager = ConversationManager()
 
     # Conversation loop
     while True:
@@ -15,10 +12,7 @@ def main():
         print(f"Assistant: {response}")
 
         # Exit handling
-        if (
-            isinstance(response, dict)
-            and response.get("end_conversation") is True
-        ):
+        if (response.get("end_conversation") is True):
             break
 
 
