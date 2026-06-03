@@ -1,7 +1,13 @@
+import os
+
+from dotenv import load_dotenv
+from openai import OpenAI
+
 from .info_advisor import InfoAdvisor
 from .schedule_advisor import ScheduleAdvisor
 from .exit_advisor import ExitAdvisor
 
+load_dotenv("../../.env")
 class MainAgent:
     def process_input(self, user_input, conversation=None):
         """
@@ -41,9 +47,16 @@ class MainAgent:
         - exit
         """
         conversation = conversation or []
+        api_key = os.getenv("OPENAI_API_KEY")
         prompt = self._build_routing_prompt(conversation)
-        # TODO: Send prompt to model and return info | schedule | exit
-        pass
+
+        client = OpenAI(api_key=api_key)
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=prompt,
+            temperature=0,
+        )
+        return response.choices[0].message.content.strip().lower()
 
     def _build_routing_prompt(self, conversation):
         """
