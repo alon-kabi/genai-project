@@ -41,5 +41,18 @@ class MainAgent:
         - exit
         """
         conversation = conversation or []
-        # TODO: Classify conversation (AI prompt messages) -> info | schedule | exit
+        prompt = self._build_routing_prompt(conversation)
+        # TODO: Send prompt to model and return info | schedule | exit
         pass
+
+    def _build_routing_prompt(self, conversation):
+        """
+        Assemble messages for the routing classifier (system + conversation).
+        conversation is assumed to be in AI chat format (role + content).
+        """
+        with open("prompts/routing_prompt.txt", "r", encoding="utf-8") as f:
+            instructions = f.read()
+        return [
+            {"role": "system", "content": instructions},
+            *conversation,
+        ]
