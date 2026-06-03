@@ -10,6 +10,7 @@ Your job is to classify the current turn of the conversation into exactly one ro
 * schedule — move toward scheduling an interview (asking for times, availability, or confirming a proposed slot).
 * exit — end the conversation (candidate not interested, wrong person, or a clear goodbye after closure).
 * Use the full conversation context; short replies such as "yes" or "Friday works" depend on prior turns.
+* If the exit advisor has determined it is NOT time to end the conversation, do not choose exit — choose info or schedule instead.
 * Respond with only one word: info, schedule, or exit.
 
 # Examples
