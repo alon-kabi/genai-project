@@ -3,13 +3,13 @@ from .schedule_advisor import ScheduleAdvisor
 from .exit_advisor import ExitAdvisor
 
 class MainAgent:
-    def process_input(self, user_input, history=None):
+    def process_input(self, user_input, conversation=None):
         """
         Receives and processes user input.
         Decides which advisor to route to.
         """
         while True:
-            decision = self.decide_route(user_input)
+            decision = self.decide_route(user_input, conversation)
 
             if decision == "exit":
                 advisor = ExitAdvisor()
@@ -33,12 +33,13 @@ class MainAgent:
                 advisor_output = advisor.process()
                 continue
 
-    def decide_route(self, user_input):
+    def decide_route(self, user_input, conversation=None):
         """
         Decide between:
         - info
         - schedule
         - exit
         """
-        # TODO: Implement routing logic
+        conversation = conversation or []
+        # TODO: Classify conversation (AI prompt messages) -> info | schedule | exit
         pass

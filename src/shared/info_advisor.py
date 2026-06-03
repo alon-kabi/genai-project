@@ -1,7 +1,7 @@
 class InfoAdvisor:
     def process(self):
         """
-        Processes the complete chat history.
+        Processes the complete conversation.
         Decides whether information retrieval is needed.
         """
 
@@ -15,15 +15,15 @@ class InfoAdvisor:
         """
         Decide if external info retrieval is required.
         """
-        # TODO: Implement logic
-        pass
+        # TODO: Replace with LLM / RAG decision
+        return True
 
     def vector_retrieve(self):
         """
         Retrieve information from vector database / RAG system.
         """
-        # TODO: Implement vector retrieval
-        pass
+        # TODO: Implement vector retrieval (Chroma)
+        return "Job info placeholder — RAG not wired yet."
 
     def send_output(self, result):
         """

@@ -1,7 +1,7 @@
 class ExitAdvisor:
     def process(self):
         """
-        Processes the complete chat history.
+        Processes the complete conversation.
         Decides whether to end the conversation.
         """
 
@@ -22,5 +22,5 @@ class ExitAdvisor:
         """
         Decide whether the conversation should end.
         """
-        # TODO: Implement exit logic
-        pass
+        # TODO: Replace with fine-tuned model
+        return False

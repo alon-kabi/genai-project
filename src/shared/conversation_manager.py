@@ -3,25 +3,23 @@ from .main_agent import MainAgent
 class ConversationManager:
     def __init__(self):
         self.main_agent = MainAgent()
-        self.history = []
+        self.conversation = []
 
     def run_turn(self, user_input):
         """
         One turn in the conversation.
-        Stores normalized conversation events in a single history list.
+        Stores messages in AI prompt format (role + content).
         """
-        self.history.append({
+        self.conversation.append({
             "role": "user",
-            "event": "message",
             "content": user_input
         })
 
-        response = self.main_agent.process_input(user_input, self.history)
+        response = self.main_agent.process_input(user_input, self.conversation)
 
         advisor_message = response["message"]
-        self.history.append({
+        self.conversation.append({
             "role": "assistant",
-            "event": "message",
             "content": advisor_message
         })
 
@@ -31,4 +29,4 @@ class ConversationManager:
         """
         Clear in-memory state and prepare for a new conversation.
         """
-        self.history = []
+        self.conversation = []

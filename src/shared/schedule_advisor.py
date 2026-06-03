@@ -1,7 +1,7 @@
 class ScheduleAdvisor:
     def process(self):
         """
-        Processes the complete chat history.
+        Processes the complete conversation.
         Decides whether scheduling is needed.
         """
 
@@ -15,15 +15,15 @@ class ScheduleAdvisor:
         """
         Decide whether scheduling flow is needed.
         """
-        # TODO: Implement scheduling decision
-        pass
+        # TODO: Replace with LLM + conversation context
+        return False
 
     def retrieve_schedule_options(self):
         """
         Retrieve scheduling options from SQL/database.
         """
-        # TODO: Implement SQL retrieval
-        pass
+        # TODO: Implement SQL retrieval (db_Tech.sql)
+        return ["Slot placeholder 1", "Slot placeholder 2", "Slot placeholder 3"]
 
     def send_output(self, result):
         """
