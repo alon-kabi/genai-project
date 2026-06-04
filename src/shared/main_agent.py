@@ -41,7 +41,7 @@ class MainAgent:
 
             elif decision == "schedule":
                 advisor = ScheduleAdvisor()
-                advisor_output = advisor.process()
+                advisor_output = advisor.process(conversation)
                 continue
 
     def decide_route(self, user_input, conversation=None, exit_declined=False):

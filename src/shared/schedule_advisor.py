@@ -1,5 +1,5 @@
 class ScheduleAdvisor:
-    def process(self):
+    def process(self, conversation=None):
         """
         Processes the complete conversation.
         Decides whether scheduling is needed.
