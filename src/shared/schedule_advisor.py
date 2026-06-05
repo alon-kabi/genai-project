@@ -3,6 +3,25 @@ class ScheduleAdvisor:
         """
         Processes the complete conversation.
         Decides whether scheduling is needed.
+
+        Example conversation expected here:
+        [
+            {"role": "user", "content": "I am interested in the Python role."},
+            {"role": "assistant", "content": "Great. Would you like to schedule an interview?"},
+            {"role": "user", "content": "Yes, next Friday morning works for me."}
+        ]
+
+        Example response (still scheduling — message to user):
+        {
+            "done": False,
+            "message": "Great — here are 3 available slots: Fri 10:00, Fri 11:30, Mon 09:00."
+        }
+
+        Example response (scheduling finished):
+        {
+            "done": True,
+            "message": "All done — your interview is confirmed for Fri 10:00."
+        }
         """
 
         if self.should_schedule():
