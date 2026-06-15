@@ -1,81 +1,87 @@
-import os
-
 from dotenv import load_dotenv
-from openai import OpenAI
+import uuid
+from langchain_classic.agents import AgentExecutor, create_openai_tools_agent
+from langchain_core.chat_history import InMemoryChatMessageHistory
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_core.runnables.history import RunnableWithMessageHistory
+from langchain_openai import ChatOpenAI
 
-from .info_advisor import InfoAdvisor
 from .schedule_advisor import ScheduleAdvisor
-from .exit_advisor import ExitAdvisor
 
 load_dotenv("../../.env")
 
+
 class MainAgent:
-    def process_input(self, user_input, conversation=None):
-        """
-        Receives and processes user input.
-        Decides which advisor to route to.
-        """
-        exit_declined = False
-        while True:
-            decision = self.decide_route(user_input, conversation, exit_declined=exit_declined)
-            exit_declined = False
+    def __init__(self):
+        self.store = {}
+        self.session_id = str(uuid.uuid4())
+        self.llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+        self.schedule_advisor = ScheduleAdvisor(self.llm)
+        self.main_agent_with_memory = self.build_main_agent_with_memory()
 
-            if decision == "exit":
-                advisor = ExitAdvisor()
-                advisor_output = advisor.process(conversation)
-                response = {
-                    "decision": decision,
-                    "advisor_output": advisor_output,
-                    "end_conversation": bool(advisor_output.get("end_conversation", False)),
-                    "message": advisor_output.get("message", "Conversation ended.")
-                }
-                if response["end_conversation"]:
-                    return response
-                exit_declined = True
-                continue
+    def get_history(self, session_id):
+        if session_id not in self.store:
+            self.store[session_id] = InMemoryChatMessageHistory()
+        return self.store[session_id]
 
-            elif decision == "info":
-                advisor = InfoAdvisor()
-                advisor_output = advisor.process()
-                continue
+    def load_system_prompt(self):
+        with open("prompts/main_prompt.txt") as f:
+            return f.read()
 
-            elif decision == "schedule":
-                advisor = ScheduleAdvisor()
-                advisor_output = advisor.process(conversation)
-                continue
-
-    def decide_route(self, user_input, conversation=None, exit_declined=False):
-        """
-        Decide between:
-        - info
-        - schedule
-        - exit
-        """
-        api_key = os.getenv("OPENAI_API_KEY")
-        prompt = self._build_routing_prompt(conversation, exit_declined=exit_declined)
-
-        client = OpenAI(api_key=api_key)
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=prompt,
-            temperature=0,
+    def build_main_agent_with_memory(self):
+        prompt = ChatPromptTemplate.from_messages([
+            ("system", self.load_system_prompt()),
+            MessagesPlaceholder(variable_name="history"),
+            MessagesPlaceholder(variable_name="agent_scratchpad"),
+            ("user", "{input}"),
+        ])
+        agent = create_openai_tools_agent(self.llm, tools=[], prompt=prompt)
+        executor = AgentExecutor(agent=agent, tools=[], verbose=False)
+        return RunnableWithMessageHistory(
+            executor,
+            get_session_history=self.get_history,
+            input_messages_key="input",
+            history_messages_key="history",
         )
-        return response.choices[0].message.content.strip().lower()
 
-    def _build_routing_prompt(self, conversation, exit_declined=False):
+    def handle_turn(self, user_input):
         """
-        Assemble messages for the routing classifier (system + conversation).
-        conversation is assumed to be in AI chat format (role + content).
+        One turn of orchestration:
+        main agent with memory, then advisor if scheduling is detected.
         """
-        with open("prompts/routing_prompt.txt", "r", encoding="utf-8") as f:
-            instructions = f.read()
-        if exit_declined:
-            instructions += (
-                "\n\n# Context\n\n"
-                "The exit advisor reviewed this conversation and determined it is NOT time to end. "
-                "Do not classify as exit. Choose info or schedule."
-            )
-        return [
-            {"role": "system", "content": instructions},
-            *conversation,
-        ]
+        main_output = self.main_agent_with_memory.invoke(
+            {"input": user_input},
+            config={"configurable": {"session_id": self.session_id}},
+        )["output"]
+
+        message = main_output
+
+        if "I will check available slots for you" in main_output:
+            full_history = self.get_history(self.session_id).messages
+            # full_history before:
+            # [
+            #     HumanMessage(content='I am interested in the Python role.'),
+            #     AIMessage(content='Great. Would you like to schedule an interview?'),
+            #     HumanMessage(content='Yes, next Friday morning works for me.'),
+            #     AIMessage(content='I will check available slots for you.'),
+            # ]
+            lines = []
+            for entry in full_history:
+                lines.append(f"{entry.type}: {entry.content}")
+            conversation = "\n".join(lines)
+            # full hisory after:
+            # human: I am interested in the Python role.
+            # ai: Great. Would you like to schedule an interview?
+            # human: Yes, next Friday morning works for me.
+            # ai: I will check available slots for you.
+            advisor_output = self.schedule_advisor.invoke(conversation)
+            message = f"{main_output}\n\n{advisor_output}"
+
+        return {
+            "message": message,
+            "end_conversation": False,
+        }
+
+    def reset(self):
+        self.store.pop(self.session_id, None)
+        self.session_id = str(uuid.uuid4())

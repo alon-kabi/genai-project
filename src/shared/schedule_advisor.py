@@ -1,51 +1,40 @@
+from datetime import datetime, timedelta
+
+from langchain_classic.agents import AgentExecutor, create_openai_tools_agent
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_core.tools import tool
+from langchain_openai import ChatOpenAI
+
+
+@tool
+def get_next_three_dates(start_date):
+    """Receive a date and return 3 optional dates. start_date format: YYYY-MM-DD."""
+    date_obj = datetime.strptime(start_date, "%Y-%m-%d")
+    return [
+        (date_obj + timedelta(days=3)).strftime("%Y-%m-%d"),
+        (date_obj + timedelta(days=6)).strftime("%Y-%m-%d"),
+        (date_obj + timedelta(days=9)).strftime("%Y-%m-%d"),
+    ]
+
+
 class ScheduleAdvisor:
-    def process(self, conversation=None):
-        """
-        Processes the complete conversation.
-        Decides whether scheduling is needed.
+    def __init__(self, llm=None):
+        self.llm = llm or ChatOpenAI(model="gpt-4o-mini", temperature=0)
+        self.tools = [get_next_three_dates]
+        self.executor = self.build_executor()
 
-        Example conversation expected here:
-        [
-            {"role": "user", "content": "I am interested in the Python role."},
-            {"role": "assistant", "content": "Great. Would you like to schedule an interview?"},
-            {"role": "user", "content": "Yes, next Friday morning works for me."}
-        ]
+    def load_system_prompt(self):
+        with open("prompts/advisor_prompt.txt") as f:
+            return f.read()
 
-        Example response (still scheduling — message to user):
-        {
-            "done": False,
-            "message": "Great — here are 3 available slots: Fri 10:00, Fri 11:30, Mon 09:00."
-        }
+    def build_executor(self):
+        prompt = ChatPromptTemplate.from_messages([
+            ("system", self.load_system_prompt()),
+            MessagesPlaceholder(variable_name="agent_scratchpad"),
+            ("user", "{input}"),
+        ])
+        agent = create_openai_tools_agent(self.llm, self.tools, prompt)
+        return AgentExecutor(agent=agent, tools=self.tools, verbose=False)
 
-        Example response (scheduling finished):
-        {
-            "done": True,
-            "message": "All done — your interview is confirmed for Fri 10:00."
-        }
-        """
-
-        if self.should_schedule():
-            options = self.retrieve_schedule_options()
-            return self.send_output(options)
-
-        return self.send_output("Scheduling not required")
-
-    def should_schedule(self):
-        """
-        Decide whether scheduling flow is needed.
-        """
-        # TODO: Replace with LLM + conversation context
-        return False
-
-    def retrieve_schedule_options(self):
-        """
-        Retrieve scheduling options from SQL/database.
-        """
-        # TODO: Implement SQL retrieval (db_Tech.sql)
-        return ["Slot placeholder 1", "Slot placeholder 2", "Slot placeholder 3"]
-
-    def send_output(self, result):
-        """
-        Sends output back to MainAgent.
-        """
-        return result
+    def invoke(self, conversation):
+        return self.executor.invoke({"input": conversation})["output"]

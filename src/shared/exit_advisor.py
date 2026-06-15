@@ -30,7 +30,7 @@ class ExitAdvisor:
         Returns (should_exit, closing_message or None).
         """
         api_key = os.getenv("OPENAI_API_KEY")
-        prompt = self._build_exit_prompt(conversation)
+        prompt = self.build_exit_prompt(conversation)
 
         client = OpenAI(api_key=api_key)
         response = client.chat.completions.create(
@@ -38,20 +38,20 @@ class ExitAdvisor:
             messages=prompt,
             temperature=0,
         )
-        return self._parse_exit_response(response.choices[0].message.content)
+        return self.parse_exit_response(response.choices[0].message.content)
 
-    def _build_exit_prompt(self, conversation):
+    def build_exit_prompt(self, conversation):
         """
         Assemble messages for the exit advisor (system + conversation).
         """
-        with open("prompts/exit_prompt.txt", "r", encoding="utf-8") as f:
+        with open("prompts/exit_prompt.txt", "r") as f:
             instructions = f.read()
         return [
             {"role": "system", "content": instructions},
             *conversation,
         ]
 
-    def _parse_exit_response(self, content):
+    def parse_exit_response(self, content):
         """
         Example (ending):
             end_conversation: yes
