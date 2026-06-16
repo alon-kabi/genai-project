@@ -65,15 +65,12 @@ class MainAgent:
             #     HumanMessage(content='Yes, next Friday morning works for me.'),
             #     AIMessage(content='I will check available slots for you.'),
             # ]
-            lines = []
-            for entry in full_history:
-                lines.append(f"{entry.type}: {entry.content}")
-            conversation = "\n".join(lines)
-            # full hisory after:
-            # human: I am interested in the Python role.
-            # ai: Great. Would you like to schedule an interview?
-            # human: Yes, next Friday morning works for me.
-            # ai: I will check available slots for you.
+            conversation = "\n".join([f"{m.type.capitalize()}: {m.content}" for m in full_history])
+            # conversation after:
+            # Human: I am interested in the Python role.
+            # Ai: Great. Would you like to schedule an interview?
+            # Human: Yes, next Friday morning works for me.
+            # Ai: I will check available slots for you.
             advisor_output = self.schedule_advisor.invoke(conversation)
             message = f"{main_output}\n\n{advisor_output}"
 
