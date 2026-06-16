@@ -6,6 +6,7 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_openai import ChatOpenAI
 
+from .info_advisor import InfoAdvisor
 from .schedule_advisor import ScheduleAdvisor
 
 load_dotenv("../../.env")
@@ -16,6 +17,7 @@ class MainAgent:
         self.store = {}
         self.session_id = str(uuid.uuid4())
         self.llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+        self.info_advisor = InfoAdvisor(self.llm)
         self.schedule_advisor = ScheduleAdvisor(self.llm)
         self.main_agent_with_memory = self.build_main_agent_with_memory()
 
@@ -47,7 +49,7 @@ class MainAgent:
     def handle_turn(self, user_input):
         """
         One turn of orchestration:
-        main agent with memory, then advisor if scheduling is detected.
+        main agent with memory, then advisor if scheduling or info is detected.
         """
         main_output = self.main_agent_with_memory.invoke(
             {"input": user_input},
@@ -56,7 +58,10 @@ class MainAgent:
 
         message = main_output
 
-        if "I will check available slots for you" in main_output:
+        if (
+            "I will check available slots for you." in main_output
+            or "Let me find that information for you." in main_output
+        ):
             full_history = self.get_history(self.session_id).messages
             # full_history before:
             # [
@@ -71,7 +76,10 @@ class MainAgent:
             # Ai: Great. Would you like to schedule an interview?
             # Human: Yes, next Friday morning works for me.
             # Ai: I will check available slots for you.
-            advisor_output = self.schedule_advisor.invoke(conversation)
+            if "I will check available slots for you" in main_output:
+                advisor_output = self.schedule_advisor.invoke(conversation)
+            else:
+                advisor_output = self.info_advisor.invoke(conversation)
             message = f"{main_output}\n\n{advisor_output}"
 
         return {
