@@ -1,32 +1,25 @@
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_classic.agents import AgentExecutor, create_openai_tools_agent
+
 class InfoAdvisor:
-    def process(self):
-        """
-        Processes the complete conversation.
-        Decides whether information retrieval is needed.
-        """
+    def __init__(self, llm=None):
+        self.llm = llm or ChatOpenAI(model="gpt-4o-mini", temperature=0)
+        self.tools = []
+        self.executor = self.build_executor()
 
-        if self.is_info_needed():
-            info = self.vector_retrieve()
-            return self.send_output(info)
+    def build_executor(self):
+        prompt = ChatPromptTemplate.from_messages([
+            ("system", self.load_system_prompt()),
+            MessagesPlaceholder(variable_name="agent_scratchpad"),
+            ("user", "{input}"),
+        ])
+        agent = create_openai_tools_agent(self.llm, self.tools, prompt)
+        return AgentExecutor(agent=agent, tools=self.tools, verbose=False)        
 
-        return self.send_output("Info not needed")
+    def load_system_prompt(self):
+        with open("prompts/info_prompt.txt") as f:
+            return f.read()
 
-    def is_info_needed(self):
-        """
-        Decide if external info retrieval is required.
-        """
-        # TODO: Replace with LLM / RAG decision
-        return True
-
-    def vector_retrieve(self):
-        """
-        Retrieve information from vector database / RAG system.
-        """
-        # TODO: Implement vector retrieval (Chroma)
-        return "Job info placeholder — RAG not wired yet."
-
-    def send_output(self, result):
-        """
-        Sends output back to MainAgent.
-        """
-        return result
+    def invoke(self, conversation):
+        return self.executor.invoke({"input": conversation})["output"]
