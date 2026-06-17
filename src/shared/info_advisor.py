@@ -1,13 +1,26 @@
 from langchain_classic.agents import AgentExecutor, create_openai_tools_agent
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain_openai import ChatOpenAI
+from langchain_core.tools import tool
+
+from .rag.chroma_client import VolatileChromaClient
 
 
 class InfoAdvisor:
-    def __init__(self, llm=None):
-        self.llm = llm or ChatOpenAI(model="gpt-4o-mini", temperature=0)
-        self.tools = []
+    def __init__(self, llm, chroma_client=None):
+        self.chroma_client = chroma_client or VolatileChromaClient()
+        self.llm = llm
+        self.tools = [self.build_search_tool()]
         self.executor = self.build_executor()
+
+    def build_search_tool(self):
+        client = self.chroma_client
+
+        @tool
+        def search_job_info(query):
+            """Search stored job description information to answer questions about the Python developer role."""
+            return client.search(query)
+
+        return search_job_info
 
     def load_system_prompt(self):
         with open("prompts/info_prompt.txt") as f:
