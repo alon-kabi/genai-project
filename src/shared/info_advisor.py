@@ -9,18 +9,15 @@ class InfoAdvisor:
     def __init__(self, llm, chroma_client=None):
         self.chroma_client = chroma_client or VolatileChromaClient()
         self.llm = llm
-        self.tools = [self.build_search_tool()]
-        self.executor = self.build_executor()
-
-    def build_search_tool(self):
         client = self.chroma_client
 
         @tool
-        def search_job_info(query):
+        def get_job_info(query):
             """Search stored job description information to answer questions about the Python developer role."""
             return client.search(query)
 
-        return search_job_info
+        self.tools = [get_job_info]
+        self.executor = self.build_executor()
 
     def load_system_prompt(self):
         with open("prompts/info_prompt.txt") as f:

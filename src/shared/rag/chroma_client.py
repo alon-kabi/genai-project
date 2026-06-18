@@ -68,7 +68,7 @@ class VolatileChromaClient:
             query_embeddings=[query_embedding],
             n_results=1,
         )
-        documents = results.get("documents", [[]])[0]
+        documents = results["documents"][0]
         if not documents:
             return "No job description information is loaded yet."
         return "\n\n".join(documents)
