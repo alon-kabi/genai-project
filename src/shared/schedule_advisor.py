@@ -3,7 +3,6 @@ from datetime import datetime, timedelta
 from langchain_classic.agents import AgentExecutor, create_openai_tools_agent
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.tools import tool
-from langchain_openai import ChatOpenAI
 
 
 @tool
@@ -18,8 +17,8 @@ def get_next_three_dates(start_date):
 
 
 class ScheduleAdvisor:
-    def __init__(self, llm=None):
-        self.llm = llm or ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    def __init__(self, llm):
+        self.llm = llm
         self.tools = [get_next_three_dates]
         self.executor = self.build_executor()
 
