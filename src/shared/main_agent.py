@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 import uuid
 from langchain_classic.agents import AgentExecutor, create_openai_tools_agent
 from langchain_core.chat_history import InMemoryChatMessageHistory
+from langchain_core.messages import AIMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_openai import ChatOpenAI
@@ -46,6 +47,33 @@ class MainAgent:
             history_messages_key="history",
         )
 
+    def load_clarification_prompt(self):
+        with open("prompts/clarification_prompt.txt") as f:
+            return f.read()
+
+    def _replace_last_assistant_message(self, content):
+        history = self.get_history(self.session_id)
+        if history.messages and history.messages[-1].type == "ai":
+            history.messages[-1] = AIMessage(content=content)
+
+    def _ask_for_clarification(self, conversation):
+        prompt = ChatPromptTemplate.from_messages([
+            ("system", self.load_clarification_prompt()),
+            ("user", "{conversation}"),
+        ])
+        return (prompt | self.llm).invoke({
+            "conversation": conversation,
+        }).content.strip()
+
+    def _handle_advisor_result(self, result, conversation):
+        if result["status"] == "false_handover":
+            message = self._ask_for_clarification(conversation)
+        else:
+            message = result["message"]
+
+        self._replace_last_assistant_message(message)
+        return message
+
     def handle_turn(self, user_input):
         """
         One turn of orchestration:
@@ -77,9 +105,10 @@ class MainAgent:
             # Human: Yes, next Friday morning works for me.
             # Ai: I will check available slots for you.
             if "I will check available slots for you" in main_output:
-                message = self.schedule_advisor.invoke(conversation)
+                result = self.schedule_advisor.invoke(conversation)
             else:
-                message = self.info_advisor.invoke(conversation)
+                result = self.info_advisor.invoke(conversation)
+            message = self._handle_advisor_result(result, conversation)
 
         return {
             "message": message,

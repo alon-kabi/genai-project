@@ -35,5 +35,11 @@ class ScheduleAdvisor:
         agent = create_openai_tools_agent(self.llm, self.tools, prompt)
         return AgentExecutor(agent=agent, tools=self.tools, verbose=False)
 
+    def _parse_output(self, output):
+        if output.strip() == "FALSE_HANDOVER":
+            return {"status": "false_handover"}
+        return {"status": "answered", "message": output}
+
     def invoke(self, conversation):
-        return self.executor.invoke({"input": conversation})["output"]
+        output = self.executor.invoke({"input": conversation})["output"]
+        return self._parse_output(output)
