@@ -77,10 +77,9 @@ class MainAgent:
             # Human: Yes, next Friday morning works for me.
             # Ai: I will check available slots for you.
             if "I will check available slots for you" in main_output:
-                advisor_output = self.schedule_advisor.invoke(conversation)
+                message = self.schedule_advisor.invoke(conversation)
             else:
-                advisor_output = self.info_advisor.invoke(conversation)
-            message = f"{main_output}\n\n{advisor_output}"
+                message = self.info_advisor.invoke(conversation)
 
         return {
             "message": message,
