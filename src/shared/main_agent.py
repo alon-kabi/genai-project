@@ -127,8 +127,8 @@ class MainAgent:
             "end_conversation": False,
         }
 
-    def dump_session(self, directory="logs/sessions"):
-        return self.session_logger.dump(directory)
+    def dump_session(self, directory="logs/sessions", error=None):
+        return self.session_logger.dump(directory, error=error)
 
     def reset(self):
         self.store.pop(self.session_id, None)

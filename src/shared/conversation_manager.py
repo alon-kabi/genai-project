@@ -18,5 +18,5 @@ class ConversationManager:
         """
         self.main_agent.reset()
 
-    def dump_session(self, directory="logs/sessions"):
-        return str(self.main_agent.dump_session(directory))
+    def dump_session(self, directory="logs/sessions", error=None):
+        return str(self.main_agent.dump_session(directory, error=error))
