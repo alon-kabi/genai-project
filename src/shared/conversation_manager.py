@@ -17,3 +17,6 @@ class ConversationManager:
         Clear in-memory state and prepare for a new conversation.
         """
         self.main_agent.reset()
+
+    def dump_session(self, directory="logs/sessions"):
+        return str(self.main_agent.dump_session(directory))

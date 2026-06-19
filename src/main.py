@@ -6,7 +6,12 @@ def main():
     # Conversation loop
     while True:
         user_input = input("User: ")
-        if user_input.strip().lower() == "exit":
+        command = user_input.strip().lower()
+        if command == "exit":
+            break
+        if command == "dump":
+            dump_path = manager.dump_session()
+            print(f"Session dump written to: {dump_path}")
             break
 
         response = manager.run_turn(user_input)

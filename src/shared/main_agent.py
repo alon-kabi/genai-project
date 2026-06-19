@@ -9,6 +9,7 @@ from langchain_openai import ChatOpenAI
 
 from .info_advisor import InfoAdvisor
 from .schedule_advisor import ScheduleAdvisor
+from .session_logger import SessionLogger
 
 load_dotenv("../../.env")
 
@@ -17,6 +18,7 @@ class MainAgent:
     def __init__(self):
         self.store = {}
         self.session_id = str(uuid.uuid4())
+        self.session_logger = SessionLogger(self.session_id)
         self.llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
         self.info_advisor = InfoAdvisor(self.llm)
         self.schedule_advisor = ScheduleAdvisor(self.llm)
@@ -56,6 +58,9 @@ class MainAgent:
         if history.messages and history.messages[-1].type == "ai":
             history.messages[-1] = AIMessage(content=content)
 
+    def _format_messages(self, messages):
+        return [{"role": message.type, "content": message.content} for message in messages]
+
     def _ask_for_clarification(self, conversation):
         prompt = ChatPromptTemplate.from_messages([
             ("system", self.load_clarification_prompt()),
@@ -79,42 +84,53 @@ class MainAgent:
         One turn of orchestration:
         main agent with memory, then advisor if scheduling or info is detected.
         """
+        history = self.get_history(self.session_id)
+        conversation_before = self._format_messages(history.messages)
+
         main_output = self.main_agent_with_memory.invoke(
             {"input": user_input},
             config={"configurable": {"session_id": self.session_id}},
         )["output"]
 
         message = main_output
+        advisor = None
+        advisor_status = None
 
         if (
             "I will check available slots for you." in main_output
             or "Let me find that information for you." in main_output
         ):
             full_history = self.get_history(self.session_id).messages
-            # full_history before:
-            # [
-            #     HumanMessage(content='I am interested in the Python role.'),
-            #     AIMessage(content='Great. Would you like to schedule an interview?'),
-            #     HumanMessage(content='Yes, next Friday morning works for me.'),
-            #     AIMessage(content='I will check available slots for you.'),
-            # ]
             conversation = "\n".join([f"{m.type.capitalize()}: {m.content}" for m in full_history])
-            # conversation after:
-            # Human: I am interested in the Python role.
-            # Ai: Great. Would you like to schedule an interview?
-            # Human: Yes, next Friday morning works for me.
-            # Ai: I will check available slots for you.
             if "I will check available slots for you" in main_output:
+                advisor = "schedule"
                 result = self.schedule_advisor.invoke(conversation)
             else:
+                advisor = "info"
                 result = self.info_advisor.invoke(conversation)
+            advisor_status = result["status"]
             message = self._handle_advisor_result(result, conversation)
+
+        self.session_logger.record_turn({
+            "turn": len(self.session_logger.turns) + 1,
+            "user_input": user_input,
+            "conversation_before": conversation_before,
+            "main_output": main_output,
+            "advisor": advisor,
+            "advisor_status": advisor_status,
+            "user_message": message,
+            "conversation": self._format_messages(self.get_history(self.session_id).messages),
+        })
 
         return {
             "message": message,
             "end_conversation": False,
         }
 
+    def dump_session(self, directory="logs/sessions"):
+        return self.session_logger.dump(directory)
+
     def reset(self):
         self.store.pop(self.session_id, None)
         self.session_id = str(uuid.uuid4())
+        self.session_logger = SessionLogger(self.session_id)
