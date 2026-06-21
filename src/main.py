@@ -34,7 +34,7 @@ def main():
         print(f"Error: {exc}")
         print(f"Session dump written to: {dump_path}")
         traceback.print_exc()
-        sys.exit(1)
+        raise
 
 
 if __name__ == "__main__":
