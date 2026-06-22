@@ -10,7 +10,7 @@ from .info_advisor import InfoAdvisor
 from .schedule_advisor import ScheduleAdvisor
 from .session_logger import SessionLogger
 
-load_dotenv("../../.env")
+load_dotenv(".env")
 
 
 class MainAgent:

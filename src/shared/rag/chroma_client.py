@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 from pypdf import PdfReader
 
-load_dotenv()
+load_dotenv(".env")
 
 class VolatileChromaClient:
     """
