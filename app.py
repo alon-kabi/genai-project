@@ -1,73 +1,41 @@
-import os
-import sys
-import traceback
-from pathlib import Path
-
 import streamlit as st
-from dotenv import load_dotenv
 
-ROOT = Path(__file__).resolve().parent
-SRC = ROOT / "src"
-SHARED = SRC / "shared"
+st.set_page_config(page_title="Recruiting Chatbot PoC", layout="wide")
+st.title("Python Developer Recruiting Chat PoC")
 
-sys.path.insert(0, str(SRC))
-os.chdir(SHARED)
-load_dotenv(ROOT / ".env")
-
-from shared import ConversationManager
+if "sessions" not in st.session_state:
+    st.session_state.sessions = {}
 
 
-def init_session_state():
-    if "manager" not in st.session_state:
-        st.session_state.manager = ConversationManager()
-    if "messages" not in st.session_state:
-        st.session_state.messages = []
+def default_user_name():
+    return f"User {len(st.session_state.sessions) + 1}"
 
 
-def dump_session_error(exc):
-    return st.session_state.manager.dump_session(error={
-        "type": type(exc).__name__,
-        "message": str(exc),
-        "traceback": traceback.format_exc(),
-    })
+def add_user(name):
+    name = name.strip() or default_user_name()
+    if name in st.session_state.sessions:
+        suffix = 2
+        base = name
+        while name in st.session_state.sessions:
+            name = f"{base} ({suffix})"
+            suffix += 1
+    st.session_state.sessions[name] = []
 
-
-st.set_page_config(page_title="Recruiting Chatbot", page_icon="💬")
-st.title("Python Developer Recruiting Chat")
-st.caption("Streamlit PoC — replaces SMS for demo and Community Cloud deployment.")
-
-init_session_state()
 
 with st.sidebar:
-    st.header("Session")
-    if st.button("New conversation"):
-        st.session_state.manager.reset()
-        st.session_state.messages = []
-        st.rerun()
-    if st.button("Dump session"):
-        dump_path = st.session_state.manager.dump_session()
-        st.success(f"Session dump written to:\n{dump_path}")
+    with st.form("add_user"):
+        user_name = st.text_input("User name", value=default_user_name())
+        if st.form_submit_button("Add user"):
+            add_user(user_name)
+            st.rerun()
 
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
-
-if prompt := st.chat_input("Type your message"):
-    st.session_state.messages.append({"role": "user", "content": prompt})
-
-    try:
-        response = st.session_state.manager.run_turn(prompt)
-        assistant_message = response.get("message", str(response))
-        st.session_state.messages.append({"role": "assistant", "content": assistant_message})
-
-        if response.get("end_conversation") is True:
-            st.session_state.manager.reset()
-            st.session_state.messages = []
-            st.info("Conversation ended. Starting a new conversation.")
-        st.rerun()
-    except Exception as exc:
-        dump_path = dump_session_error(exc)
-        st.error(str(exc))
-        with st.expander("Traceback"):
-            st.code(traceback.format_exc())
-        st.warning(f"Session dump written to: {dump_path}")
+if not st.session_state.sessions:
+    st.info("Add a user from the sidebar to start.")
+else:
+    tabs = st.tabs(list(st.session_state.sessions.keys()))
+    for label, tab in zip(st.session_state.sessions, tabs):
+        with tab:
+            for message in st.session_state.sessions[label]:
+                with st.chat_message(message["role"]):
+                    st.markdown(message["content"])
+            st.chat_input("Message", key=f"chat_{label}", disabled=True)
