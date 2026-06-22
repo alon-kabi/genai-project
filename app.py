@@ -1,3 +1,16 @@
+import os
+import sys
+
+project_root = os.path.dirname(os.path.abspath(__file__))
+if os.path.abspath(os.getcwd()) != project_root:
+    print(
+        "Error: run this app from the project root (genai-project).\n"
+        f"  cd {project_root}\n"
+        "  streamlit run app.py",
+        file=sys.stderr,
+    )
+    sys.exit(1)
+
 import streamlit as st
 
 st.set_page_config(page_title="Recruiting Chatbot PoC", layout="wide")

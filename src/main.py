@@ -1,7 +1,18 @@
+import os
 import sys
 import traceback
 
-from shared import ConversationManager
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if os.path.abspath(os.getcwd()) != project_root:
+    print(
+        "Error: run this app from the project root (genai-project).\n"
+        f"  cd {project_root}\n"
+        "  python -m src.main",
+        file=sys.stderr,
+    )
+    sys.exit(1)
+
+from src.shared import ConversationManager
 
 
 def main():
