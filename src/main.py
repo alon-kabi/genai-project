@@ -6,6 +6,7 @@ from shared import ConversationManager
 
 def main():
     manager = ConversationManager()
+    session_id = manager.create_session_id()
 
     try:
         while True:
@@ -14,19 +15,20 @@ def main():
             if command == "exit":
                 break
             if command == "dump":
-                dump_path = manager.dump_session()
+                dump_path = manager.dump_session(session_id)
                 print(f"Session dump written to: {dump_path}")
                 break
 
-            response = manager.run_turn(user_input)
+            response = manager.run_turn(user_input, session_id)
 
             print(f"Assistant: {response.get('message', response)}")
 
             if response.get("end_conversation") is True:
-                manager.reset()
+                manager.reset(session_id)
+                session_id = manager.create_session_id()
                 print("Conversation state reset. Starting a new conversation...")
     except Exception as exc:
-        dump_path = manager.dump_session(error={
+        dump_path = manager.dump_session(session_id, error={
             "type": type(exc).__name__,
             "message": str(exc),
             "traceback": traceback.format_exc(),
