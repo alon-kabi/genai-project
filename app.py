@@ -11,6 +11,11 @@ if os.path.abspath(os.getcwd()) != project_root:
     )
     sys.exit(1)
 
+from dotenv import load_dotenv
+from src.shared import ConversationManager
+
+load_dotenv(".env")
+
 import streamlit as st
 
 st.set_page_config(page_title="Recruiting Chatbot PoC", layout="wide")
