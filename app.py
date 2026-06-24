@@ -63,4 +63,4 @@ else:
             for message in user["messages"]:
                 with st.chat_message(message["role"]):
                     st.markdown(message["content"])
-            st.chat_input("Message", key=f"chat_{label}", disabled=True)
+            st.chat_input("Message", key=f"chat_{label}")
