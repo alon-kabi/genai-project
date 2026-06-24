@@ -40,7 +40,10 @@ def add_user(name):
         while name in st.session_state.sessions:
             name = f"{base} ({suffix})"
             suffix += 1
-    st.session_state.sessions[name] = []
+    st.session_state.sessions[name] = {
+        "session_id": st.session_state.manager.create_session_id(),
+        "messages": [],
+    }
 
 
 with st.sidebar:
@@ -56,7 +59,8 @@ else:
     tabs = st.tabs(list(st.session_state.sessions.keys()))
     for label, tab in zip(st.session_state.sessions, tabs):
         with tab:
-            for message in st.session_state.sessions[label]:
+            user = st.session_state.sessions[label]
+            for message in user["messages"]:
                 with st.chat_message(message["role"]):
                     st.markdown(message["content"])
             st.chat_input("Message", key=f"chat_{label}", disabled=True)
