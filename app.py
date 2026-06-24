@@ -1,5 +1,6 @@
 import os
 import sys
+import traceback
 
 project_root = os.path.dirname(os.path.abspath(__file__))
 if os.path.abspath(os.getcwd()) != project_root:
@@ -66,7 +67,16 @@ else:
             if prompt := st.chat_input("Message", key=f"chat_{label}"):
                 user["messages"].append({"role": "user", "content": prompt})
 
-                with st.spinner("Thinking..."):
-                    response = st.session_state.manager.run_turn(prompt, user["session_id"])
-
-                user["messages"].append({"role": "assistant", "content": response["message"]})
+                try:
+                    with st.spinner("Thinking..."):
+                        response = st.session_state.manager.run_turn(prompt, user["session_id"])
+                except Exception as exc:
+                    st.error(str(exc))
+                    dump_path = st.session_state.manager.dump_session(user["session_id"], error={
+                        "type": type(exc).__name__,
+                        "message": str(exc),
+                        "traceback": traceback.format_exc(),
+                    })
+                    st.caption(f"Session dump written to: {dump_path}")
+                else:
+                    user["messages"].append({"role": "assistant", "content": response["message"]})
