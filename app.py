@@ -63,4 +63,10 @@ else:
             for message in user["messages"]:
                 with st.chat_message(message["role"]):
                     st.markdown(message["content"])
-            st.chat_input("Message", key=f"chat_{label}")
+            if prompt := st.chat_input("Message", key=f"chat_{label}"):
+                user["messages"].append({"role": "user", "content": prompt})
+
+                with st.spinner("Thinking..."):
+                    response = st.session_state.manager.run_turn(prompt, user["session_id"])
+
+                user["messages"].append({"role": "assistant", "content": response["message"]})
