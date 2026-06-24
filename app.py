@@ -24,6 +24,9 @@ st.title("Python Developer Recruiting Chat PoC")
 if "sessions" not in st.session_state:
     st.session_state.sessions = {}
 
+if "manager" not in st.session_state:
+    st.session_state.manager = ConversationManager()
+
 
 def default_user_name():
     return f"User {len(st.session_state.sessions) + 1}"
