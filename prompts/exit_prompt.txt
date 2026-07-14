@@ -20,28 +20,697 @@ end_conversation: no
 
 # Examples
 
-<user_query>
-I already accepted another offer. Please remove me from your list.
-</user_query>
+Each example has a conversation transcript followed by the expected exit advisor decision.
 
-<assistant_response>
+<conversation_transcript>
+Candidate: I already accepted another offer. Please remove me from your list.
+</conversation_transcript>
+
+<exit_advisor_response>
 end_conversation: yes
 message: Understood — congratulations on the new role. We will close your file and will not contact you again. Best of luck!
-</assistant_response>
+</exit_advisor_response>
 
-<user_query>
-Thanks
-</user_query>
+<conversation_transcript>
+Candidate: Thanks
+</conversation_transcript>
 
-<assistant_response>
+<exit_advisor_response>
 end_conversation: no
-</assistant_response>
+</exit_advisor_response>
 
-<user_query>
-Wrong number, I'm not looking for work.
-</user_query>
+<conversation_transcript>
+Candidate: Wrong number, I'm not looking for work.
+</conversation_transcript>
 
-<assistant_response>
+<exit_advisor_response>
 end_conversation: yes
 message: Sorry for the bother — we will stop messaging this number. Have a good day.
-</assistant_response>
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Thanks for applying to our Python Developer opening. What kinds of Python projects have you worked on recently?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Thanks for applying to our Python Developer opening. What kinds of Python projects have you worked on recently?
+Candidate: I've been using Python professionally for five years, mostly for data analysis.
+Recruiter: Our engineering manager can interview you Wednesday at 10 AM or Thursday at 2 PM. Which works best?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Thanks for applying to our Python Developer opening. What kinds of Python projects have you worked on recently?
+Candidate: I've been using Python professionally for five years, mostly for data analysis.
+Recruiter: Our engineering manager can interview you Wednesday at 10 AM or Thursday at 2 PM. Which works best?
+Candidate: I can't at that time—I'm busy.
+Recruiter: No problem. How about Thursday at 4 PM instead?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Thanks for applying to our Python Developer opening. What kinds of Python projects have you worked on recently?
+Candidate: I've been using Python professionally for five years, mostly for data analysis.
+Recruiter: Our engineering manager can interview you Wednesday at 10 AM or Thursday at 2 PM. Which works best?
+Candidate: I can't at that time—I'm busy.
+Recruiter: No problem. How about Thursday at 4 PM instead?
+Candidate: Monday at 3 PM is good.
+Recruiter: Great, your interview is confirmed. You'll receive a calendar invite shortly.
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: yes
+message: Thanks - you are all set. Looking forward to speaking with you!
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hi, thanks for submitting your application for our Python Developer role. Could you share a bit about your Python experience?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hi, thanks for submitting your application for our Python Developer role. Could you share a bit about your Python experience?
+Candidate: I have three years' experience with Django and Flask.
+Recruiter: Do you have any questions of your own?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hi, thanks for submitting your application for our Python Developer role. Could you share a bit about your Python experience?
+Candidate: I have three years' experience with Django and Flask.
+Recruiter: Do you have any questions of your own?
+Candidate: Could you share more about the company's cloud technologies?
+Recruiter: We currently deploy to AWS using Docker and ECS.
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hi, thanks for submitting your application for our Python Developer role. Could you share a bit about your Python experience?
+Candidate: I have three years' experience with Django and Flask.
+Recruiter: Do you have any questions of your own?
+Candidate: Could you share more about the company's cloud technologies?
+Recruiter: We currently deploy to AWS using Docker and ECS.
+Candidate: Sounds great! I'd be happy to schedule a meeting
+Recruiter: Understood—what about next Tuesday at 10 AM?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hi, thanks for submitting your application for our Python Developer role. Could you share a bit about your Python experience?
+Candidate: I have three years' experience with Django and Flask.
+Recruiter: Do you have any questions of your own?
+Candidate: Could you share more about the company's cloud technologies?
+Recruiter: We currently deploy to AWS using Docker and ECS.
+Candidate: Sounds great! I'd be happy to schedule a meeting
+Recruiter: Understood—what about next Tuesday at 10 AM?
+Candidate: Tuesday at 10 AM works.
+Recruiter: Excellent, the slot is reserved. Looking forward to speaking with you!
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: yes
+message: Thanks - you are all set. Looking forward to speaking with you!
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hi, thanks for submitting your application for our Python Developer role. Could you share a bit about your Python experience?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hi, thanks for submitting your application for our Python Developer role. Could you share a bit about your Python experience?
+Candidate: Sure, I have four years of Python experience and two with SQL.
+Recruiter: How comfortable are you with SQL in addition to Python?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hi, thanks for submitting your application for our Python Developer role. Could you share a bit about your Python experience?
+Candidate: Sure, I have four years of Python experience and two with SQL.
+Recruiter: How comfortable are you with SQL in addition to Python?
+Candidate: Very comfortable, may I ask what technologies does the current stack use?
+Recruiter: We currently deploy to AWS using Docker and ECS.
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hi, thanks for submitting your application for our Python Developer role. Could you share a bit about your Python experience?
+Candidate: Sure, I have four years of Python experience and two with SQL.
+Recruiter: How comfortable are you with SQL in addition to Python?
+Candidate: Very comfortable, may I ask what technologies does the current stack use?
+Recruiter: We currently deploy to AWS using Docker and ECS.
+Candidate: I would like to set an appointment, does Monday at 3 PM is good.
+Recruiter: Great, your interview is confirmed. You'll receive a calendar invite shortly.
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: yes
+message: Thanks - you are all set. Looking forward to speaking with you!
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hello! I saw your application for the Python Developer position—how long have you been working with Python?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hello! I saw your application for the Python Developer position—how long have you been working with Python?
+Candidate: I've been using Python professionally for five years, mostly for data analysis.
+Recruiter: Are you also using SQL in addition to Python?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hello! I saw your application for the Python Developer position—how long have you been working with Python?
+Candidate: I've been using Python professionally for five years, mostly for data analysis.
+Recruiter: Are you also using SQL in addition to Python?
+Candidate: Yes, SQL is a big part of my job. Is the position fully remote or hybrid?
+Recruiter: Hybrid work model, with at least two days of remote work per week, will you be able to meet next Wednesday at 10 AM
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hello! I saw your application for the Python Developer position—how long have you been working with Python?
+Candidate: I've been using Python professionally for five years, mostly for data analysis.
+Recruiter: Are you also using SQL in addition to Python?
+Candidate: Yes, SQL is a big part of my job. Is the position fully remote or hybrid?
+Recruiter: Hybrid work model, with at least two days of remote work per week, will you be able to meet next Wednesday at 10 AM
+Candidate: Wednesday at 10 AM works for me.
+Recruiter: Great, your interview is confirmed. You'll receive a calendar invite shortly.
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: yes
+message: Thanks - you are all set. Looking forward to speaking with you!
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hi, thanks for submitting your application for our Python Developer role. Could you share a bit about your Python experience?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hi, thanks for submitting your application for our Python Developer role. Could you share a bit about your Python experience?
+Candidate: I primarily work with Python for backend services.
+Recruiter: Our engineering manager can interview you Wednesday at 10 AM or Thursday at 2 PM. Which works best?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hi, thanks for submitting your application for our Python Developer role. Could you share a bit about your Python experience?
+Candidate: I primarily work with Python for backend services.
+Recruiter: Our engineering manager can interview you Wednesday at 10 AM or Thursday at 2 PM. Which works best?
+Candidate: Please remove me from your list. Thanks.
+Recruiter: No worries—I appreciate the update. Take care!
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: yes
+message: Understood - we will close this conversation and will not follow up about this role. Best of luck!
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hello! I saw your application for the Python Developer position—how long have you been working with Python?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hello! I saw your application for the Python Developer position—how long have you been working with Python?
+Candidate: I've been using Python professionally for five years.
+Recruiter: Could we schedule a chat this Friday at 11 AM or next Monday at 9 AM?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hello! I saw your application for the Python Developer position—how long have you been working with Python?
+Candidate: I've been using Python professionally for five years.
+Recruiter: Could we schedule a chat this Friday at 11 AM or next Monday at 9 AM?
+Candidate: Friday 11 AM sounds great.
+Recruiter: Fantastic. I've booked the interview—see you then!
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: yes
+message: Thanks - you are all set. Looking forward to speaking with you!
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hello! I saw your application for the Python Developer position—how long have you been working with Python?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hello! I saw your application for the Python Developer position—how long have you been working with Python?
+Candidate: I have three years' experience with Django and Flask.
+Recruiter: How about an interview Monday at 3 PM or Tuesday at 11 AM?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hello! I saw your application for the Python Developer position—how long have you been working with Python?
+Candidate: I have three years' experience with Django and Flask.
+Recruiter: How about an interview Monday at 3 PM or Tuesday at 11 AM?
+Candidate: I'm unavailable then; do you have any other times?
+Recruiter: Understood—what about next Tuesday at 10 AM?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hello! I saw your application for the Python Developer position—how long have you been working with Python?
+Candidate: I have three years' experience with Django and Flask.
+Recruiter: How about an interview Monday at 3 PM or Tuesday at 11 AM?
+Candidate: I'm unavailable then; do you have any other times?
+Recruiter: Understood—what about next Tuesday at 10 AM?
+Candidate: Tuesday at 10 AM works.
+Recruiter: Great, your interview is confirmed. You'll receive a calendar invite shortly.
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: yes
+message: Thanks - you are all set. Looking forward to speaking with you!
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hello! I saw your application for the Python Developer position—how long have you been working with Python?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hello! I saw your application for the Python Developer position—how long have you been working with Python?
+Candidate: I have three years' experience with Python.
+Recruiter: Our engineering manager can interview you Wednesday at 10 AM or Thursday at 2 PM. Which works best?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hello! I saw your application for the Python Developer position—how long have you been working with Python?
+Candidate: I have three years' experience with Python.
+Recruiter: Our engineering manager can interview you Wednesday at 10 AM or Thursday at 2 PM. Which works best?
+Candidate: Those slots don't work for me.
+Recruiter: Understood—what about next Tuesday at 10 AM?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hello! I saw your application for the Python Developer position—how long have you been working with Python?
+Candidate: I have three years' experience with Python.
+Recruiter: Our engineering manager can interview you Wednesday at 10 AM or Thursday at 2 PM. Which works best?
+Candidate: Those slots don't work for me.
+Recruiter: Understood—what about next Tuesday at 10 AM?
+Candidate: I'm unavailable at that time, as I have other commitments. I'll reach out if it becomes relevant
+Recruiter: How about next Thursday?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hello! I saw your application for the Python Developer position—how long have you been working with Python?
+Candidate: I have three years' experience with Python.
+Recruiter: Our engineering manager can interview you Wednesday at 10 AM or Thursday at 2 PM. Which works best?
+Candidate: Those slots don't work for me.
+Recruiter: Understood—what about next Tuesday at 10 AM?
+Candidate: I'm unavailable at that time, as I have other commitments. I'll reach out if it becomes relevant
+Recruiter: How about next Thursday?
+Candidate: I will be intouch, please stop texting me
+Recruiter: Sure, got it, we'll be intouch
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: yes
+message: Understood - we will close this conversation and will not follow up about this role. Best of luck!
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hi, thanks for submitting your application for our Python Developer role. Could you share a bit about your Python experience?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hi, thanks for submitting your application for our Python Developer role. Could you share a bit about your Python experience?
+Candidate: I've been using Python professionally for five years, mostly for data analysis.
+Recruiter: Our engineering manager can interview you Wednesday at 10 AM or Thursday at 2 PM. Which works best?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hi, thanks for submitting your application for our Python Developer role. Could you share a bit about your Python experience?
+Candidate: I've been using Python professionally for five years, mostly for data analysis.
+Recruiter: Our engineering manager can interview you Wednesday at 10 AM or Thursday at 2 PM. Which works best?
+Candidate: Tuesday at 10 AM works. But can I get more details about the position?
+Recruiter: Great, your interview is confirmed. Sure, We're looking for a skilled Python Developer with expertise in Python 3 and experience working with frameworks such as Django, Flask, or FastAPI. The ideal candidate should be familiar with building RESTful APIs, working with SQL or NoSQL databases, and using version control systems like Git.
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hi, thanks for submitting your application for our Python Developer role. Could you share a bit about your Python experience?
+Candidate: I've been using Python professionally for five years, mostly for data analysis.
+Recruiter: Our engineering manager can interview you Wednesday at 10 AM or Thursday at 2 PM. Which works best?
+Candidate: Tuesday at 10 AM works. But can I get more details about the position?
+Recruiter: Great, your interview is confirmed. Sure, We're looking for a skilled Python Developer with expertise in Python 3 and experience working with frameworks such as Django, Flask, or FastAPI. The ideal candidate should be familiar with building RESTful APIs, working with SQL or NoSQL databases, and using version control systems like Git.
+Candidate: Sounds greate, see you then
+Recruiter: Looking forward to it, regards
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: yes
+message: Thanks - you are all set. Looking forward to speaking with you!
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hello! I saw your application for the Python Developer position—how long have you been working with Python?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hello! I saw your application for the Python Developer position—how long have you been working with Python?
+Candidate: I've been using Python for a couple of month, I don't have much experience in that area, but I'm eager to learn and quickly adapt.
+Recruiter: Could you elaborate on your experience with cloud platforms like AWS or GCP?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hello! I saw your application for the Python Developer position—how long have you been working with Python?
+Candidate: I've been using Python for a couple of month, I don't have much experience in that area, but I'm eager to learn and quickly adapt.
+Recruiter: Could you elaborate on your experience with cloud platforms like AWS or GCP?
+Candidate: I've worked a bit with AWS, but I don't have experience with GCP yet.
+Recruiter: I see, could we schedule a chat this Friday at 11 AM or next Monday at 9 AM?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hello! I saw your application for the Python Developer position—how long have you been working with Python?
+Candidate: I've been using Python for a couple of month, I don't have much experience in that area, but I'm eager to learn and quickly adapt.
+Recruiter: Could you elaborate on your experience with cloud platforms like AWS or GCP?
+Candidate: I've worked a bit with AWS, but I don't have experience with GCP yet.
+Recruiter: I see, could we schedule a chat this Friday at 11 AM or next Monday at 9 AM?
+Candidate: Monday at 3 PM is good.
+Recruiter: Fantastic. I've booked the interview—see you then!
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: yes
+message: Thanks - you are all set. Looking forward to speaking with you!
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hi, thanks for submitting your application for our Python Developer role. Could you share a bit about your Python experience?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hi, thanks for submitting your application for our Python Developer role. Could you share a bit about your Python experience?
+Candidate: I have three years' experience with Pyhon and AWS.
+Recruiter: Could you elaborate on your experience with cloud platforms like AWS?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hi, thanks for submitting your application for our Python Developer role. Could you share a bit about your Python experience?
+Candidate: I have three years' experience with Pyhon and AWS.
+Recruiter: Could you elaborate on your experience with cloud platforms like AWS?
+Candidate: I've worked a bit with AWS, mainly for deploying small apps and managing storage, but I'm still gaining experience and open to learning more.
+Recruiter: I see, the role focuses on building backend services in Python, mainly FastAPI.
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hi, thanks for submitting your application for our Python Developer role. Could you share a bit about your Python experience?
+Candidate: I have three years' experience with Pyhon and AWS.
+Recruiter: Could you elaborate on your experience with cloud platforms like AWS?
+Candidate: I've worked a bit with AWS, mainly for deploying small apps and managing storage, but I'm still gaining experience and open to learning more.
+Recruiter: I see, the role focuses on building backend services in Python, mainly FastAPI.
+Candidate: Sounds very interesting, I'm confident I can handle it
+Recruiter: Great, Can we set up a meeting next Tuesday
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hi, thanks for submitting your application for our Python Developer role. Could you share a bit about your Python experience?
+Candidate: I have three years' experience with Pyhon and AWS.
+Recruiter: Could you elaborate on your experience with cloud platforms like AWS?
+Candidate: I've worked a bit with AWS, mainly for deploying small apps and managing storage, but I'm still gaining experience and open to learning more.
+Recruiter: I see, the role focuses on building backend services in Python, mainly FastAPI.
+Candidate: Sounds very interesting, I'm confident I can handle it
+Recruiter: Great, Can we set up a meeting next Tuesday
+Candidate: Yes, absolutely!
+Recruiter: Great, your interview is confirmed. You'll receive a calendar invite shortly.
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: yes
+message: Thanks - you are all set. Looking forward to speaking with you!
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hi, thanks for submitting your application for our Python Developer role. Could you share a bit about your Python experience?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hi, thanks for submitting your application for our Python Developer role. Could you share a bit about your Python experience?
+Candidate: Yes, 3 years' experience
+Recruiter: Could we schedule a chat this Friday at 11 AM or next Monday at 9 AM?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hi, thanks for submitting your application for our Python Developer role. Could you share a bit about your Python experience?
+Candidate: Yes, 3 years' experience
+Recruiter: Could we schedule a chat this Friday at 11 AM or next Monday at 9 AM?
+Candidate: Those slots don't work for me.
+Recruiter: No problem. How about Thursday at 4 PM instead?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hi, thanks for submitting your application for our Python Developer role. Could you share a bit about your Python experience?
+Candidate: Yes, 3 years' experience
+Recruiter: Could we schedule a chat this Friday at 11 AM or next Monday at 9 AM?
+Candidate: Those slots don't work for me.
+Recruiter: No problem. How about Thursday at 4 PM instead?
+Candidate: Wednesday at 10 AM works for me.
+Recruiter: Excellent, the slot is reserved. Looking forward to speaking with you!
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: yes
+message: Thanks - you are all set. Looking forward to speaking with you!
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hello! I saw your application for the Python Developer position—how long have you been working with Python?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hello! I saw your application for the Python Developer position—how long have you been working with Python?
+Candidate: I primarily work with Python for backend services and have solid SQL knowledge.
+Recruiter: Could we schedule a chat this Friday at 11 AM or next Monday at 9 AM?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hello! I saw your application for the Python Developer position—how long have you been working with Python?
+Candidate: I primarily work with Python for backend services and have solid SQL knowledge.
+Recruiter: Could we schedule a chat this Friday at 11 AM or next Monday at 9 AM?
+Candidate: I'm no longer interested in the position.
+Recruiter: No worries—I appreciate the update. Take care!
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: yes
+message: Understood - we will close this conversation and will not follow up about this role. Best of luck!
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hi, thanks for submitting your application for our Python Developer role. Could you share a bit about your Python experience?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hi, thanks for submitting your application for our Python Developer role. Could you share a bit about your Python experience?
+Candidate: Sure, I have four years of Python experience.
+Recruiter: How about an interview Monday at 3 PM or Tuesday at 11 AM?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hi, thanks for submitting your application for our Python Developer role. Could you share a bit about your Python experience?
+Candidate: Sure, I have four years of Python experience.
+Recruiter: How about an interview Monday at 3 PM or Tuesday at 11 AM?
+Candidate: I can't at that time—I'm busy.
+Recruiter: Alright, would Wednesday at 1 PM work?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hi, thanks for submitting your application for our Python Developer role. Could you share a bit about your Python experience?
+Candidate: Sure, I have four years of Python experience.
+Recruiter: How about an interview Monday at 3 PM or Tuesday at 11 AM?
+Candidate: I can't at that time—I'm busy.
+Recruiter: Alright, would Wednesday at 1 PM work?
+Candidate: Tuesday at 10 AM works.
+Recruiter: Excellent, the slot is reserved. Looking forward to speaking with you!
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: yes
+message: Thanks - you are all set. Looking forward to speaking with you!
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hi, thanks for submitting your application for our Python Developer role. Could you share a bit about your Python experience?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hi, thanks for submitting your application for our Python Developer role. Could you share a bit about your Python experience?
+Candidate: I've been using Python professionally for five years, mostly for ML.
+Recruiter: Could we schedule a chat this Friday at 11 AM or next Monday at 9 AM?
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: no
+</exit_advisor_response>
+
+<conversation_transcript>
+Recruiter: Hi, thanks for submitting your application for our Python Developer role. Could you share a bit about your Python experience?
+Candidate: I've been using Python professionally for five years, mostly for ML.
+Recruiter: Could we schedule a chat this Friday at 11 AM or next Monday at 9 AM?
+Candidate: I'm sorry, but I'm no longer interested.
+Recruiter: Understood. I'll close your application for now. Best of luck in your job search!
+</conversation_transcript>
+
+<exit_advisor_response>
+end_conversation: yes
+message: Understood - we will close this conversation and will not follow up about this role. Best of luck!
+</exit_advisor_response>
