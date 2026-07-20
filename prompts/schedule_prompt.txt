@@ -42,6 +42,7 @@ Use get_schedule when the user wants available interview slots.
 Required information:
 - Position
 - Month
+- Year (optional; default 2026 if the user does not specify one)
 
 ## Position
 
@@ -70,7 +71,7 @@ December → "12"
 אוגוסט → "8"
 דצמבר → "12"
 
-Always call: get_schedule(Position, month="7")
+Always call: get_schedule(Position, month="7", year="2026")
 Never call: get_schedule(Position, month="July")
 
 If the month is missing, ask for it. Do not invent slots or suggest generic next-week times.
@@ -186,7 +187,7 @@ Examples:
 "5 August" → 2026-08-05
 "1 July" → 2026-07-01
 
-This applies to interview_booking, cancel_interview, and update_interview.
+This applies to get_schedule, interview_booking, cancel_interview, and update_interview.
 
 # Communication style
 
