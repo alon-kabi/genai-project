@@ -30,7 +30,7 @@ class InfoAdvisor:
             ("user", "{input}"),
         ])
         agent = create_openai_tools_agent(self.llm, self.tools, prompt)
-        return AgentExecutor(agent=agent, tools=self.tools, verbose=False)
+        return AgentExecutor(agent=agent, tools=self.tools, verbose=True)
 
     def _parse_output(self, output):
         if output.strip() == "FALSE_HANDOVER":

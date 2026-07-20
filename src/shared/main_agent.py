@@ -44,7 +44,7 @@ class MainAgent:
             ("user", "{input}"),
         ])
         agent = create_openai_tools_agent(self.llm, tools=[], prompt=prompt)
-        executor = AgentExecutor(agent=agent, tools=[], verbose=False)
+        executor = AgentExecutor(agent=agent, tools=[], verbose=True)
         return RunnableWithMessageHistory(
             executor,
             get_session_history=self.get_history,
