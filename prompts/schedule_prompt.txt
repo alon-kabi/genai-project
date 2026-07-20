@@ -102,7 +102,10 @@ Before calling, identify from the conversation:
 - Interview_date
 - Interview_time
 - Interview_type (Zoom or Office)
+- CandidateName
+- CandidatePhone
 
+If CandidateName or CandidatePhone is missing, ask for it before calling interview_booking.
 Do not ask again for information already provided.
 
 If interview_booking returns SUCCESS:

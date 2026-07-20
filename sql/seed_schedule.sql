@@ -186,6 +186,10 @@ CREATE TABLE dbo.InterviewBooking (
 
     Status VARCHAR(20) NULL,
 
+    CandidateName NVARCHAR(100) NULL,
+
+    CandidatePhone VARCHAR(20) NULL,
+
     CreatedDate DATETIME NOT NULL DEFAULT GETDATE(),
 
     UpdatedDate DATETIME NULL

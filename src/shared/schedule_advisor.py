@@ -96,7 +96,9 @@ def interview_booking(
     Position: str,
     Interview_date: str,
     Interview_time: str,
-    Interview_type: str
+    Interview_type: str,
+    CandidateName: str,
+    CandidatePhone: str
 ) -> str:
     """
     Book an interview slot into InterviewBooking.
@@ -106,6 +108,8 @@ def interview_booking(
     - Interview_date
     - Interview_time
     - Interview_type (Zoom or Office)
+    - CandidateName
+    - CandidatePhone
     """
     conn = None
     try:
@@ -127,7 +131,9 @@ def interview_booking(
                 Interview_date,
                 Interview_time,
                 Interview_type,
-                Status
+                Status,
+                CandidateName,
+                CandidatePhone
             )
             VALUES
             (
@@ -135,14 +141,18 @@ def interview_booking(
                 %s,
                 %s,
                 %s,
-                'Booked'
+                'Booked',
+                %s,
+                %s
             )
             """,
             (
                 Position,
                 Interview_date,
                 Interview_time,
-                Interview_type
+                Interview_type,
+                CandidateName,
+                CandidatePhone
             )
         )
 
@@ -152,7 +162,8 @@ def interview_booking(
 
         return (
             f"SUCCESS: Interview booked successfully. "
-            f"{Position}, {Interview_date}, {Interview_time}, {Interview_type}, Booked"
+            f"{Position}, {Interview_date}, {Interview_time}, {Interview_type}, "
+            f"{CandidateName}, {CandidatePhone}, Booked"
         )
 
     except Exception as e:
