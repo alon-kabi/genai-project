@@ -157,6 +157,49 @@ CROSS JOIN Positions p
 
 
 OPTION (MAXRECURSION 400);
+GO
 
 
+-------------------------------------------------
+-- InterviewBooking
+-------------------------------------------------
+
+USE Tech;
+GO
+
+IF OBJECT_ID('dbo.InterviewBooking', 'U') IS NOT NULL
+BEGIN
+    DROP TABLE dbo.InterviewBooking;
+END;
+GO
+
+CREATE TABLE dbo.InterviewBooking (
+    BookingID INT IDENTITY(1,1) PRIMARY KEY,
+
+    Position VARCHAR(100) NOT NULL,
+
+    Interview_date DATE NOT NULL,
+
+    Interview_time TIME(0) NOT NULL,
+
+    Interview_type VARCHAR(100) NOT NULL,
+
+    Status VARCHAR(20) NULL,
+
+    CreatedDate DATETIME NOT NULL DEFAULT GETDATE(),
+
+    UpdatedDate DATETIME NULL
+);
+GO
+
+-- אינדקסים
+CREATE INDEX IX_InterviewBooking_Date
+ON dbo.InterviewBooking (Interview_date);
+
+CREATE INDEX IX_InterviewBooking_Position
+ON dbo.InterviewBooking (Position);
+
+CREATE INDEX IX_InterviewBooking_Status
+ON dbo.InterviewBooking (Status);
+GO
 

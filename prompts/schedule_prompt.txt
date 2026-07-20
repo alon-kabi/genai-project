@@ -102,7 +102,6 @@ Before calling, identify from the conversation:
 - Interview_date
 - Interview_time
 - Interview_type (Zoom or Office)
-- Status (use "Booked" when booking)
 
 Do not ask again for information already provided.
 
