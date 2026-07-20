@@ -29,23 +29,29 @@ if "conversation" not in st.session_state:
     st.session_state.conversation = {
         "session_id": st.session_state.manager.create_session_id(),
         "messages": [],
-        "pending_prompt": None,
     }
 
+conversation = st.session_state.conversation
 
-def process_pending_prompt():
-    conversation = st.session_state.conversation
-    pending = conversation.get("pending_prompt")
-    if not pending:
-        return
+if not conversation["messages"]:
+    st.info("To begin a conversation, type your message below.")
 
-    conversation["pending_prompt"] = None
-    conversation["messages"].append({"role": "user", "content": pending})
+for message in conversation["messages"]:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+
+if prompt := st.chat_input("Message"):
+    conversation["messages"].append({"role": "user", "content": prompt})
+    with st.chat_message("user"):
+        st.markdown(prompt)
 
     try:
         with st.spinner("Thinking..."):
-            response = st.session_state.manager.run_turn(pending, conversation["session_id"])
-        conversation["messages"].append({"role": "assistant", "content": response["message"]})
+            response = st.session_state.manager.run_turn(prompt, conversation["session_id"])
+        assistant_message = response["message"]
+        conversation["messages"].append({"role": "assistant", "content": assistant_message})
+        with st.chat_message("assistant"):
+            st.markdown(assistant_message)
     except Exception as exc:
         st.error(str(exc))
         dump_path = st.session_state.manager.dump_session(conversation["session_id"], error={
@@ -56,19 +62,3 @@ def process_pending_prompt():
         st.caption(f"Session dump written to: {dump_path}")
     finally:
         st.session_state.conversation = conversation
-
-
-process_pending_prompt()
-
-conversation = st.session_state.conversation
-if not conversation["messages"]:
-    st.info("To begin a conversation, type your message below.")
-
-for message in conversation["messages"]:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
-
-if prompt := st.chat_input("Message"):
-    conversation["pending_prompt"] = prompt
-    st.session_state.conversation = conversation
-    st.rerun()

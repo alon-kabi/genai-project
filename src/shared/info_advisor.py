@@ -20,7 +20,7 @@ class InfoAdvisor:
         self.executor = self.build_executor()
 
     def load_system_prompt(self):
-        with open("prompts/info_prompt.txt") as f:
+        with open("prompts/info_prompt.txt", encoding="utf-8") as f:
             return f.read()
 
     def build_executor(self):
