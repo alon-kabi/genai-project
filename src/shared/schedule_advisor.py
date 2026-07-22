@@ -1,36 +1,44 @@
-import os
+from datetime import date
 
-import pymssql
 import pandas as pd
 from dotenv import load_dotenv
 from langchain_classic.agents import AgentExecutor, create_openai_tools_agent
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.tools import tool
 
+from .mssql_backend import get_mssql_backend
+
 load_dotenv(".env")
+
+_DB = get_mssql_backend()
 
 
 def _db_connect():
-    return pymssql.connect(
-        server=os.getenv("MSSQL_SERVER"),
-        user=os.getenv("MSSQL_USER"),
-        password=os.getenv("MSSQL_PASSWORD"),
-        database=os.getenv("MSSQL_DATABASE"),
-    )
+    return _DB.connect()
+
+
+def _execute(cursor, query, params):
+    cursor.execute(_DB.adapt_query(query), params)
+
+
+def _read_sql(query, conn, params):
+    return pd.read_sql(_DB.adapt_query(query), conn, params=params)
 
 
 def _claim_slot(cursor, position, interview_date, interview_time) -> bool:
     # Mark the Schedule row as taken (Available=0) only if it is still free.
     # Returns False when the slot is missing or already booked → prevents double-booking.
     cursor.execute(
-        """
+        _DB.adapt_query(
+            """
         UPDATE Schedule
         SET Available = 0
         WHERE Position = %s
         AND [Date] = %s
         AND InterviewTime = %s
         AND Available = 1
-        """,
+        """
+        ),
         (position, interview_date, interview_time),
     )
     return cursor.rowcount > 0
@@ -39,38 +47,67 @@ def _claim_slot(cursor, position, interview_date, interview_time) -> bool:
 def _release_slot(cursor, position, interview_date, interview_time) -> None:
     # Free the Schedule row again so get_schedule can offer it.
     cursor.execute(
-        """
+        _DB.adapt_query(
+            """
         UPDATE Schedule
         SET Available = 1
         WHERE Position = %s
         AND [Date] = %s
         AND InterviewTime = %s
-        """,
+        """
+        ),
         (position, interview_date, interview_time),
     )
 
 
 # TOOL get_schedule
 @tool
-def get_schedule(Position: str, month: str, year: str = "2026") -> str:
-    """Return available interview slots by position, month, and year."""
+def get_schedule(
+    Position: str,
+    month: str,
+    year: str = "2026",
+    day: str = "",
+) -> str:
+    """Return available interview slots by position, month, and year.
+
+    Pass day (1-31) when the candidate asks for a specific date such as next Friday.
+    Omit day or pass an empty string to search the whole month.
+    """
     conn = None
     try:
         conn = _db_connect()
+        day_value = day.strip() if day else ""
+        position_pattern = f"%{Position.strip()}%"
 
-        query = """
-        SELECT TOP 10
-            [Date],
-            InterviewTime
-        FROM Schedule
-        WHERE Position = %s
-        AND Available = 1
-        AND MONTH([Date]) = %s
-        AND YEAR([Date]) = %s
-        ORDER BY [Date], InterviewTime
-        """
+        if day_value:
+            query = """
+            SELECT
+                [Date],
+                InterviewTime
+            FROM Schedule
+            WHERE Position LIKE %s
+            AND Available = 1
+            AND MONTH([Date]) = %s
+            AND YEAR([Date]) = %s
+            AND DAY([Date]) = %s
+            ORDER BY InterviewTime
+            """
+            params = [position_pattern, month, year, day_value]
+        else:
+            query = """
+            SELECT TOP 30
+                [Date],
+                InterviewTime
+            FROM Schedule
+            WHERE Position LIKE %s
+            AND Available = 1
+            AND MONTH([Date]) = %s
+            AND YEAR([Date]) = %s
+            ORDER BY [Date], InterviewTime
+            """
+            params = [position_pattern, month, year]
 
-        df = pd.read_sql(query, conn, params=[Position, month, year])
+        df = _read_sql(query, conn, params=params)
 
         if df.empty:
             return "No available slots found."
@@ -123,7 +160,8 @@ def interview_booking(
             return "FAILED: That interview slot is no longer available."
 
         # 2) Record the booking only after the slot was successfully claimed.
-        cursor.execute(
+        _execute(
+            cursor,
             """
             INSERT INTO InterviewBooking
             (
@@ -153,7 +191,7 @@ def interview_booking(
                 Interview_type,
                 CandidateName,
                 CandidatePhone
-            )
+            ),
         )
 
         # 3) Commit both changes together so Schedule and InterviewBooking stay in sync.
@@ -194,7 +232,8 @@ as 'Cancelled' and updates the UpdatedDate timestamp."""
         cursor = conn.cursor()
 
         # Soft-cancel the booking (keep the row; set Status = Cancelled).
-        cursor.execute(
+        _execute(
+            cursor,
             """
             UPDATE InterviewBooking
             SET
@@ -210,7 +249,7 @@ as 'Cancelled' and updates the UpdatedDate timestamp."""
                 Position,
                 Interview_date,
                 Interview_time
-            )
+            ),
         )
 
         updated_rows = cursor.rowcount
@@ -279,7 +318,8 @@ def update_interview(
                 return "FAILED: The new interview slot is no longer available."
 
         # Move the booking to the new date/time/type.
-        cursor.execute(
+        _execute(
+            cursor,
             """
             UPDATE InterviewBooking
             SET
@@ -301,7 +341,7 @@ def update_interview(
                 Position,
                 Current_date,
                 Current_time
-            )
+            ),
         )
 
         updated_rows = cursor.rowcount
@@ -348,7 +388,7 @@ class ScheduleAdvisor:
 
     def load_system_prompt(self):
         with open("prompts/schedule_prompt.txt", encoding="utf-8") as f:
-            return f.read()
+            return f.read().replace("__TODAY_DATE__", date.today().isoformat())
 
     def build_executor(self):
         prompt = ChatPromptTemplate.from_messages([
@@ -360,8 +400,6 @@ class ScheduleAdvisor:
         return AgentExecutor(agent=agent, tools=self.tools, verbose=True)
 
     def _parse_output(self, output):
-        if output.strip() == "FALSE_HANDOVER":
-            return {"status": "false_handover"}
         return {"status": "answered", "message": output}
 
     def invoke(self, conversation):
