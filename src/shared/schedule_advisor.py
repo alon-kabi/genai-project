@@ -353,8 +353,8 @@ class ScheduleAdvisor:
     def build_executor(self):
         prompt = ChatPromptTemplate.from_messages([
             ("system", self.load_system_prompt()),
-            MessagesPlaceholder(variable_name="agent_scratchpad"),
             ("user", "{input}"),
+            MessagesPlaceholder(variable_name="agent_scratchpad")
         ])
         agent = create_openai_tools_agent(self.llm, self.tools, prompt)
         return AgentExecutor(agent=agent, tools=self.tools, verbose=True)
