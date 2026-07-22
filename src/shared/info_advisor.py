@@ -13,7 +13,14 @@ class InfoAdvisor:
 
         @tool
         def get_job_info(query):
-            """Search stored job description information to answer questions about the Python developer role."""
+            """
+            job description information relevant to the candidate's question.
+            
+            this tool at most once per user question.
+            
+            returned information is sufficient to answer the question.
+            receiving the result, do not call this tool again.
+            """
             return client.search(query)
 
         self.tools = [get_job_info]
@@ -26,11 +33,11 @@ class InfoAdvisor:
     def build_executor(self):
         prompt = ChatPromptTemplate.from_messages([
             ("system", self.load_system_prompt()),
-            MessagesPlaceholder(variable_name="agent_scratchpad"),
             ("user", "{input}"),
+            MessagesPlaceholder(variable_name="agent_scratchpad")
         ])
         agent = create_openai_tools_agent(self.llm, self.tools, prompt)
-        return AgentExecutor(agent=agent, tools=self.tools, verbose=True)
+        return AgentExecutor(agent=agent, tools=self.tools)
 
     def _parse_output(self, output):
         if output.strip() == "FALSE_HANDOVER":
