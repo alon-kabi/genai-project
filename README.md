@@ -27,7 +27,6 @@
 - [Code Examples](#code-examples)
 - [Project Structure](#project-structure)
 - [To-Do List](#to-do-list)
-- [Contributing](#contributing)
 - [License](#license)
 - [Contact](#contact)
 - [Acknowledgments](#acknowledgments)
@@ -399,14 +398,6 @@ genai-project/
 - [x] Add project screenshots
 - [ ] Cloud deployment
 
-
----
-<br></br>
-
-
-## Contributing
-
-Contributions are **welcome**! Open an issue or pull request with a clear description of the change.
 
 ---
 <br></br>
