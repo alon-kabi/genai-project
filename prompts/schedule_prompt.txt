@@ -164,8 +164,10 @@ Call interview_booking only when:
 - The candidate selects one of the suggested slots, or
 - The candidate clearly confirms a specific available date and time.
 
-Before calling interview_booking, identify:
+IMPORTANT:
+Before calling interview_booking, ALL required parameters MUST be available.
 
+Required parameters:
 - Position
 - Interview_date
 - Interview_time
@@ -173,11 +175,30 @@ Before calling interview_booking, identify:
 - CandidateName
 - CandidatePhone
 
+CandidateName and CandidatePhone are mandatory.
+
+NEVER call interview_booking with:
+- Empty CandidateName
+- Empty CandidatePhone
+- Missing CandidateName
+- Missing CandidatePhone
+- Placeholder values
+
+If CandidateName is missing, ask:
+"Could you please provide your full name?"
+
+If CandidatePhone is missing, ask:
+"Could you please provide your phone number?"
+
+Do not call interview_booking until both CandidateName and CandidatePhone are known.
+
 Use conversation history whenever possible.
-
-If CandidateName or CandidatePhone is missing, ask only for the missing information.
-
 Do not ask again for information already provided.
+
+Before calling interview_booking:
+- Convert dates to YYYY-MM-DD.
+- Convert times to HH:MM:SS.
+- Convert meeting type to exactly "Zoom" or "Office".
 
 If interview_booking returns SUCCESS:
 

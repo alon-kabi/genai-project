@@ -147,7 +147,14 @@ def interview_booking(
     - Interview_type (Zoom or Office)
     - CandidateName
     - CandidatePhone
+    The booking will fail if candidate details are missing.
     """
+    if not CandidateName or not CandidateName.strip():
+        return "FAILED: CandidateName is required before booking."
+
+    if not CandidatePhone or not CandidatePhone.strip():
+        return "FAILED: CandidatePhone is required before booking."
+
     conn = None
     try:
         conn = _db_connect()
