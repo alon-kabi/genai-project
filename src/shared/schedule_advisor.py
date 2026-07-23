@@ -33,13 +33,13 @@ def _claim_slot(cursor, position, interview_date, interview_time) -> bool:
             """
         UPDATE Schedule
         SET Available = 0
-        WHERE Position = %s
+        WHERE Position LIKE %s
         AND [Date] = %s
         AND InterviewTime = %s
         AND Available = 1
         """
         ),
-        (position, interview_date, interview_time),
+        (f"%{position.strip()}%", interview_date, interview_time),
     )
     return cursor.rowcount > 0
 
@@ -51,12 +51,12 @@ def _release_slot(cursor, position, interview_date, interview_time) -> None:
             """
         UPDATE Schedule
         SET Available = 1
-        WHERE Position = %s
+        WHERE Position LIKE %s
         AND [Date] = %s
         AND InterviewTime = %s
         """
         ),
-        (position, interview_date, interview_time),
+        (f"%{position.strip()}%", interview_date, interview_time),
     )
 
 

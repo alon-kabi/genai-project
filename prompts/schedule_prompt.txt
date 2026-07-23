@@ -44,19 +44,27 @@ Required information:
 
 ## Position
 
-Extract the position from the conversation.
+Use Position only when the candidate explicitly states the role they want to interview for.
 
-Examples:
-- Python Developer
-- SQL Developer
-- Data Analyst
-- ML Engineer
+Count as explicit only when the candidate clearly names the role (examples: "Python", "Python Developer", "SQL Developer", "Data Analyst", "ML Engineer").
 
-If the position is missing, ask:
+Do not infer position from:
+- The recruiting chatbot scope or job campaign
+- Assistant or recruiter messages
+- A generic request such as "can I get an interview?" or "schedule an interview"
+- The app title or assumed default role
+
+If the candidate has not explicitly named a position, always ask:
 
 "Which position would you like to schedule an interview for?"
 
-Do not call any tool until the position is known.
+Do not call get_schedule, interview_booking, cancel_interview, or update_interview until the candidate has explicitly provided the position.
+
+When calling tools, map common names to database values when needed:
+- Python Developer / Python → Python Dev
+- SQL Developer / SQL → SQL Dev
+- Data Analyst → Data Analyst
+- ML Engineer → ML Engineer
 
 ## Month
 
